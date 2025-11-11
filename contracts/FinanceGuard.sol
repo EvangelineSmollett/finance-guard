@@ -123,6 +123,23 @@ contract FinanceGuard is SepoliaConfig {
         userTransactions[msg.sender].push(newTransaction);
         userTransactionCount[msg.sender]++;
 
+        // Update monthly totals
+        if (transactionType == TransactionType.Income) {
+            encryptedMonthlyIncome[msg.sender][yearMonth] = FHE.add(
+                encryptedMonthlyIncome[msg.sender][yearMonth],
+                amount
+            );
+            FHE.allowThis(encryptedMonthlyIncome[msg.sender][yearMonth]);
+            FHE.allow(encryptedMonthlyIncome[msg.sender][yearMonth], msg.sender);
+        } else {
+            encryptedMonthlyExpense[msg.sender][yearMonth] = FHE.add(
+                encryptedMonthlyExpense[msg.sender][yearMonth],
+                amount
+            );
+            FHE.allowThis(encryptedMonthlyExpense[msg.sender][yearMonth]);
+            FHE.allow(encryptedMonthlyExpense[msg.sender][yearMonth], msg.sender);
+        }
+
         // Allow user to decrypt their transaction amount
         if (encryptOnChain) {
             FHE.allowThis(amount);
