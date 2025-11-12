@@ -68,7 +68,37 @@ export default function Index() {
     }
 
     try {
-      toast.error("Decryption not implemented");
+      const encHandle = encryptedAmount as string;
+      
+      const keypair = fhevmInstance.generateKeypair();
+      const handleContractPairs = [{ handle: encHandle, contractAddress: contractAddress }];
+      const startTimeStamp = Math.floor(Date.now() / 1000).toString();
+      const durationDays = '7';
+      const contractAddresses = [contractAddress];
+      const eip712 = fhevmInstance.createEIP712(keypair.publicKey, contractAddresses, startTimeStamp, durationDays);
+      
+      const signature = await signTypedDataAsync({
+        domain: eip712.domain,
+        types: { UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification },
+        primaryType: 'UserDecryptRequestVerification',
+        message: eip712.message,
+      });
+
+      const result = await fhevmInstance.userDecrypt(
+        handleContractPairs,
+        keypair.privateKey,
+        keypair.publicKey,
+        signature.replace('0x', ''),
+        contractAddresses,
+        address,
+        startTimeStamp,
+        durationDays,
+      );
+
+      const decryptedValue = result[encHandle] as bigint;
+      const amount = Number(decryptedValue);
+      setDecryptedAmounts((prev) => new Map(prev.set(index, amount)));
+      toast.success("Amount decrypted successfully!");
     } catch (error: any) {
       console.error("Decryption error:", error);
       toast.error("Failed to decrypt amount: " + (error?.message || "Unknown error"));
