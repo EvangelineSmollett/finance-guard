@@ -6,12 +6,20 @@ const deployFinanceGuard: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("FinanceGuard", {
+  const result = await deploy("FinanceGuard", {
     from: deployer,
     args: [],
     log: true,
     waitConfirmations: 1,
   });
+
+  if (!result.address || result.address === "0x0000000000000000000000000000000000000000") {
+    throw new Error("Contract deployment failed: invalid address");
+  }
+
+  if (!result.newlyDeployed && hre.network.name !== "localhost") {
+    console.warn("Contract already deployed at:", result.address);
+  }
 };
 
 export default deployFinanceGuard;
