@@ -30,7 +30,7 @@ export function TransactionCard({
   isDecrypted,
 }: TransactionCardProps) {
   const isIncome = transaction.transactionType === 0;
-  const amount = centsToDollars(decryptedAmount);
+  const amount = decryptedAmount ? centsToDollars(decryptedAmount) : 0;
   const showEncrypted = transaction.isEncrypted && !isDecrypted;
 
   return (
