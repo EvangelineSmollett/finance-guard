@@ -80,8 +80,61 @@ export function AddTransactionDialog({
     setIsSubmitting(true);
 
     try {
-      toast.error("Transaction submission not implemented");
-      setIsSubmitting(false);
+      console.log("Starting transaction encryption...");
+      console.log("FHEVM Instance:", fhevmInstance);
+      console.log("Contract Address:", contractAddress);
+      console.log("User Address:", address);
+      console.log("Amount in cents:", amountInCents);
+
+      const input = fhevmInstance.createEncryptedInput(contractAddress, address as `0x${string}`);
+      input.add32(amountInCents);
+      const encryptedInput = await input.encrypt();
+      
+      console.log("Encryption successful, calling contract...");
+      console.log("Encrypted input:", encryptedInput);
+      console.log("Handle type:", typeof encryptedInput.handles[0], encryptedInput.handles[0]);
+      
+      let handleHex: `0x${string}`;
+      const handle = encryptedInput.handles[0];
+      
+      if (typeof handle === 'string') {
+        handleHex = handle.startsWith('0x') ? handle as `0x${string}` : `0x${handle}` as `0x${string}`;
+      } else if (handle instanceof Uint8Array || isBytesLike(handle)) {
+        handleHex = hexlify(handle) as `0x${string}`;
+      } else {
+        handleHex = hexlify(handle as any) as `0x${string}`;
+      }
+      
+      console.log("Handle hex:", handleHex);
+      console.log("Handle hex length:", handleHex.length);
+      
+      let inputProofHex: `0x${string}`;
+      const proof = encryptedInput.inputProof;
+      if (typeof proof === 'string') {
+        inputProofHex = proof.startsWith('0x') ? proof as `0x${string}` : `0x${proof}` as `0x${string}`;
+      } else if (proof instanceof Uint8Array || isBytesLike(proof)) {
+        inputProofHex = hexlify(proof) as `0x${string}`;
+      } else {
+        inputProofHex = hexlify(proof as any) as `0x${string}`;
+      }
+      
+      console.log("Input proof hex length:", inputProofHex.length);
+      
+      const result = writeContract({
+        address: contractAddress,
+        abi: CONTRACT_ABI,
+        functionName: "addTransaction",
+        args: [
+          transactionType === "income" ? 0 : 1,
+          description,
+          handleHex,
+          inputProofHex,
+          category,
+          encryptOnChain,
+        ],
+      });
+      
+      console.log("Write contract called, result:", result);
     } catch (error: any) {
       console.error("Error adding transaction:", error);
       toast.error(error.message || "Failed to add transaction");
