@@ -101,7 +101,9 @@ export default function Index() {
       toast.success("Amount decrypted successfully!");
     } catch (error: any) {
       console.error("Decryption error:", error);
-      toast.error("Failed to decrypt amount: " + (error?.message || "Unknown error"));
+      const errorMessage = error?.message || "Unknown error";
+      console.error("Decryption error details:", error);
+      toast.error(`Failed to decrypt amount: ${errorMessage}`);
     }
   };
 
@@ -129,7 +131,9 @@ export default function Index() {
         <Header />
         <main className="flex-1 flex items-center justify-center bg-background">
           <div className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="text-muted-foreground">Initializing encryption service...</p>
+            <p className="text-xs text-muted-foreground">This may take a few seconds</p>
           </div>
         </main>
       </div>
