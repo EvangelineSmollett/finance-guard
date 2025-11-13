@@ -181,7 +181,7 @@ export default function Index() {
             ) : (
               transactions.map((tx, index) => (
                 <TransactionCard
-                  key={index}
+                  key={`${tx.id}-${index}`}
                   transaction={tx}
                   decryptedAmount={decryptedAmounts.get(index)}
                   onDecrypt={() => decryptAmount(index, tx.encryptedAmount)}
