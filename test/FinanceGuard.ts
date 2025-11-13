@@ -232,5 +232,39 @@ describe("FinanceGuard", function () {
     expect(aliceDecrypted).to.eq(aliceAmount);
     expect(bobDecrypted).to.eq(bobAmount);
   });
+
+  it("should reject empty description", async function () {
+    const amountInCents = 10000;
+    const encryptedAmount = await fhevm
+      .createEncryptedInput(financeGuardContractAddress, signers.alice.address)
+      .add32(amountInCents)
+      .encrypt();
+
+    await expect(
+      financeGuardContract
+        .connect(signers.alice)
+        .addTransaction(0, "", encryptedAmount.handles[0], encryptedAmount.inputProof, "Salary", true)
+    ).to.be.revertedWith("Description cannot be empty");
+  });
+
+  it("should reject empty category", async function () {
+    const amountInCents = 10000;
+    const encryptedAmount = await fhevm
+      .createEncryptedInput(financeGuardContractAddress, signers.alice.address)
+      .add32(amountInCents)
+      .encrypt();
+
+    await expect(
+      financeGuardContract
+        .connect(signers.alice)
+        .addTransaction(0, "Salary", encryptedAmount.handles[0], encryptedAmount.inputProof, "", true)
+    ).to.be.revertedWith("Category cannot be empty");
+  });
+
+  it("should handle transaction index out of bounds", async function () {
+    await expect(
+      financeGuardContract.getTransaction(signers.alice.address, 0)
+    ).to.be.revertedWith("Transaction index out of bounds");
+  });
 });
 
