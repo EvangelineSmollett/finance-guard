@@ -40,7 +40,7 @@ contract FinanceGuard is SepoliaConfig {
     event TransactionAdded(
         address indexed user,
         uint256 indexed transactionId,
-        TransactionType transactionType,
+        TransactionType indexed transactionType,
         string description,
         string category,
         uint256 timestamp,
@@ -57,6 +57,8 @@ contract FinanceGuard is SepoliaConfig {
     /// @param timestamp Unix timestamp
     /// @return yearMonth Year and month as uint256 (e.g., 202412)
     function getYearMonth(uint256 timestamp) public pure returns (uint256) {
+        require(timestamp > 0, "Invalid timestamp");
+        
         // Convert timestamp to date components
         // This is a simplified calculation - in production, consider using a library
         uint256 secondsInDay = 86400;
@@ -103,6 +105,9 @@ contract FinanceGuard is SepoliaConfig {
         string memory category,
         bool encryptOnChain
     ) external {
+        require(bytes(description).length > 0, "Description cannot be empty");
+        require(bytes(category).length > 0, "Category cannot be empty");
+        
         euint32 amount = FHE.fromExternal(encryptedAmount, inputProof);
 
         uint256 transactionId = userTransactionCount[msg.sender];
