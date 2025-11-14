@@ -181,7 +181,9 @@ contract FinanceGuard is SepoliaConfig {
     /// @param index Transaction index
     /// @return transaction The transaction
     function getTransaction(address user, uint256 index) external view returns (Transaction memory) {
+        require(user != address(0), "Invalid user address");
         require(index < userTransactionCount[user], "Transaction index out of bounds");
+        require(userTransactions[user].length > 0, "User has no transactions");
         return userTransactions[user][index];
     }
 
