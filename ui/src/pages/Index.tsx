@@ -32,6 +32,7 @@ export default function Index() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [decryptedAmounts, setDecryptedAmounts] = useState<Map<number, number>>(new Map());
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   
   const provider = walletClient ? (walletClient as any) : undefined;
   const { instance: fhevmInstance, status: fhevmStatus, error: fhevmError } = useFhevm({
@@ -54,9 +55,16 @@ export default function Index() {
 
   useEffect(() => {
     if (userTransactions) {
-      setTransactions(userTransactions);
+      const sorted = [...userTransactions].sort((a, b) => {
+        if (sortOrder === "newest") {
+          return Number(b.timestamp) - Number(a.timestamp);
+        } else {
+          return Number(a.timestamp) - Number(b.timestamp);
+        }
+      });
+      setTransactions(sorted);
     }
-  }, [userTransactions]);
+  }, [userTransactions, sortOrder]);
 
   const { signTypedDataAsync } = useSignTypedData();
 
@@ -167,10 +175,20 @@ export default function Index() {
               <h1 className="text-3xl font-bold">Finance Guard</h1>
               <p className="text-muted-foreground">Finance That Stays Yours</p>
             </div>
-            <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Transaction
-            </Button>
+            <div className="flex items-center gap-2">
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as "newest" | "oldest")}
+                className="px-3 py-2 border rounded-md text-sm"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+              <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Transaction
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-4">
