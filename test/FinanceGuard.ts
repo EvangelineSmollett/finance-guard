@@ -266,5 +266,29 @@ describe("FinanceGuard", function () {
       financeGuardContract.getTransaction(signers.alice.address, 0)
     ).to.be.revertedWith("Transaction index out of bounds");
   });
+
+  it("should handle multiple transactions in sequence", async function () {
+    const amounts = [10000, 20000, 30000];
+    let totalIncome = 0;
+
+    for (let i = 0; i < amounts.length; i++) {
+      const encryptedAmount = await fhevm
+        .createEncryptedInput(financeGuardContractAddress, signers.alice.address)
+        .add32(amounts[i])
+        .encrypt();
+
+      await financeGuardContract
+        .connect(signers.alice)
+        .addTransaction(0, `Income ${i + 1}`, encryptedAmount.handles[0], encryptedAmount.inputProof, "Salary", true);
+      
+      totalIncome += amounts[i];
+    }
+
+    const count = await financeGuardContract.getUserTransactionCount(signers.alice.address);
+    expect(count).to.eq(amounts.length);
+
+    const allTransactions = await financeGuardContract.getUserTransactions(signers.alice.address);
+    expect(allTransactions.length).to.eq(amounts.length);
+  });
 });
 
