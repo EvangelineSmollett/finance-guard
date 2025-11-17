@@ -47,18 +47,21 @@ export function TransactionCard({
             <p className="text-sm text-muted-foreground">{transaction.category}</p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onDecrypt}
-          disabled={!transaction.isEncrypted || isDecrypted}
-        >
-          {showEncrypted ? (
-            <Lock className="h-4 w-4" />
-          ) : (
-            <Unlock className="h-4 w-4" />
-          )}
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onDecrypt}
+            disabled={!transaction.isEncrypted || isDecrypted}
+            title={showEncrypted ? "Decrypt amount" : "Amount decrypted"}
+          >
+            {showEncrypted ? (
+              <Lock className="h-4 w-4" />
+            ) : (
+              <Unlock className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between">
