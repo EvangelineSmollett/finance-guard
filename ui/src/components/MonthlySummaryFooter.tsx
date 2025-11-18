@@ -119,6 +119,15 @@ export function MonthlySummaryFooter({
                 Click the lock icon on transactions to decrypt and see totals
               </p>
             )}
+            {transactions.length > 0 && (
+              <div className="mt-4 pt-4 border-t">
+                <p className="text-xs text-muted-foreground text-center">
+                  Total Transactions: {transactions.length} | 
+                  Decrypted: {decryptedAmounts.size} | 
+                  Encrypted: {transactions.length - decryptedAmounts.size}
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
