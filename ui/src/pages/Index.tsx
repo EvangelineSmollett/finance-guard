@@ -170,21 +170,21 @@ export default function Index() {
       <Header />
       <main className="flex-1 bg-background">
         <div className="container mx-auto px-4 py-8">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold">Finance Guard</h1>
-              <p className="text-muted-foreground">Finance That Stays Yours</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">Finance Guard</h1>
+              <p className="text-muted-foreground text-sm sm:text-base">Finance That Stays Yours</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as "newest" | "oldest")}
-                className="px-3 py-2 border rounded-md text-sm"
+                className="px-3 py-2 border rounded-md text-sm w-full sm:w-auto"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
-              <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
+              <Button onClick={() => setAddDialogOpen(true)} className="gap-2 w-full sm:w-auto">
                 <Plus className="h-4 w-4" />
                 Add Transaction
               </Button>
