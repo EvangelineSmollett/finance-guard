@@ -173,6 +173,7 @@ contract FinanceGuard is SepoliaConfig {
     /// @param user User address
     /// @return count Number of transactions
     function getUserTransactionCount(address user) external view returns (uint256) {
+        require(user != address(0), "Invalid user address");
         return userTransactionCount[user];
     }
 
