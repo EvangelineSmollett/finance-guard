@@ -11,6 +11,7 @@
     "genabi": "node scripts/genabi.mjs"
   },
   "dependencies": {
+    "@fhevm/mock-utils": "^0.1.0",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.5",
@@ -19,7 +20,6 @@
     "@radix-ui/react-tabs": "^1.1.12",
     "@rainbow-me/rainbowkit": "^2.2.9",
     "@tanstack/react-query": "^5.83.0",
-    "@fhevm/mock-utils": "^0.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
@@ -28,6 +28,7 @@
     "lucide-react": "^0.462.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "recharts": "^3.6.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
@@ -52,5 +53,3 @@
     "vite": "^5.4.19"
   }
 }
-
-
