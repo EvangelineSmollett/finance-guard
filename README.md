@@ -4,8 +4,8 @@ A privacy-preserving personal finance management application built on blockchain
 
 ## 🌐 Live Demo
 
-- **Vercel Deployment**: [https://finance-guard.vercel.app/](https://finance-guard.vercel.app/)
-- **Video Demo**: [finance-guard.mp4](./finance-guard.mp4)
+- **Vercel Deployment**: [https://finance-guard-pro.vercel.app/](https://finance-guard-pro.vercel.app/)
+- **Video Demo**: [finance-guard.mp4](https://youtu.be/o2997ROw0jU)
 
 ## 📋 Core Features
 
